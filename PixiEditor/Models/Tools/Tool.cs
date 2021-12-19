@@ -10,11 +10,11 @@ namespace PixiEditor.Models.Tools
 {
     public abstract class Tool : NotifyableObject
     {
-        public virtual string ToolName => GetType().Name.Replace("Tool", string.Empty);
+        public virtual string ToolName => ToolHelpers.GetToolName(GetType());
 
-        public virtual string DisplayName => ToolName.AddSpacesBeforeUppercaseLetters();
+        public virtual string DisplayName => ToolHelpers.GetToolDisplayName(GetType());
 
-        public virtual string ImagePath => $"/Images/Tools/{ToolName}Image.png";
+        public virtual string ImagePath => ToolHelpers.GetImagePath(GetType());
 
         public virtual bool HideHighlight { get; }
 

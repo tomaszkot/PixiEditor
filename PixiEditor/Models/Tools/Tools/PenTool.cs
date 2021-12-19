@@ -1,4 +1,5 @@
 ﻿using PixiEditor.Models.Controllers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.Layers;
 using PixiEditor.Models.Position;
 using PixiEditor.Models.Tools.Brushes;
@@ -13,6 +14,7 @@ using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [ToolCommand(Key.B, ModifierKeys.None)]
     internal class PenTool : ShapeTool
     {
         public Brush Brush { get; set; }

@@ -33,12 +33,12 @@ namespace PixiEditor.Models.Controllers.Shortcuts
 
                 var icommand = command.GetICommand();
 
-                if (!icommand.CanExecute(null))
+                if (!icommand.CanExecute(command.CommandParameter))
                 {
                     return;
                 }
 
-                icommand.Execute(null);
+                icommand.Execute(command.CommandParameter);
 
                 LastShortcut = new Shortcut(command.Key, command.GetICommand());
 

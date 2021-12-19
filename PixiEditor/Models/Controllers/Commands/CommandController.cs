@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PixiEditor.Helpers;
+using PixiEditor.Models.Tools;
+using PixiEditor.ViewModels.SubViewModels.Main;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Input;
@@ -27,6 +31,8 @@ namespace PixiEditor.Models.Controllers.Commands
 
         public void Init()
         {
+            InitTools();
+
             foreach (Type type in Assembly.GetAssembly(typeof(CommandController)).GetTypes())
             {
                 var service = _services.GetService(type);
@@ -49,6 +55,24 @@ namespace PixiEditor.Models.Controllers.Commands
 
                     _commandsByKey.Add((command.Key, command.Modifiers), command);
                 }
+            }
+        }
+
+        private void InitTools()
+        {
+            foreach (Tool tool in _services.GetServices<Tool>())
+            {
+                var command = GetToolCommand(tool.GetType());
+
+                if (command == null)
+                {
+                    continue;
+                }
+
+                _commands.Add(command);
+                _commandsByKey.Add((command.Key, command.Modifiers), command);
+
+                continue;
             }
         }
 
@@ -87,9 +111,45 @@ namespace PixiEditor.Models.Controllers.Commands
             }
         }
 
+        private Command GetToolCommand(Type type)
+        {
+            var attribute = type.GetCustomAttribute<ToolCommandAttribute>();
+
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            string displayName = attribute.Display;
+
+            if (displayName == null)
+            {
+                displayName = ToolHelpers.GetToolDisplayName(type);
+            }
+
+            displayName = $"Select {displayName} Tool";
+
+            string name = $"PixiEditor.Tools.{ToolHelpers.GetToolName(type)}";
+
+            return new Command()
+            {
+                Name = name,
+                Display = displayName,
+                Key = attribute.Key,
+                Modifiers = attribute.Modifiers,
+                GetICommand = () =>
+                {
+                    return _services.GetRequiredService<ToolsViewModel>().SelectToolCommand;
+                },
+                CommandParameter = type
+            };
+        }
+
         public class Command
         {
             public Func<ICommand> GetICommand { get; set; }
+
+            public object CommandParameter { get; set; }
 
             public string Name { get; set; }
 
