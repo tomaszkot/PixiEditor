@@ -42,6 +42,11 @@ namespace PixiEditor.Models.Controllers.Commands
 
                 foreach (var command in commands)
                 {
+                    if (command.Key == Key.None && command.Modifiers == ModifierKeys.None)
+                    {
+                        continue;
+                    }
+
                     _commandsByKey.Add((command.Key, command.Modifiers), command);
                 }
             }
