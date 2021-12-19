@@ -25,9 +25,15 @@ namespace PixiEditor.Models.Controllers.Shortcuts
             if (!BlockShortcutExecution)
             {
                 var command = _commandController.GetFromKeyCombination(key, modifiers);
+
+                if (command == null)
+                {
+                    return;
+                }
+
                 var icommand = command.GetICommand();
 
-                if (command == null || !icommand.CanExecute(null))
+                if (!icommand.CanExecute(null))
                 {
                     return;
                 }
