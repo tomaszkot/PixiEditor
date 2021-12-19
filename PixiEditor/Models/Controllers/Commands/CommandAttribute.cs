@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace PixiEditor.Models.Controllers.Commands
 {
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class CommandAttribute : Attribute
     {
         public string Name { get; set; }
@@ -13,6 +13,8 @@ namespace PixiEditor.Models.Controllers.Commands
         public Key Key { get; set; }
 
         public ModifierKeys Modifiers { get; set; }
+
+        public object CommandParameter { get; set; }
 
         public CommandAttribute(string name, string displayName)
             : this(name, displayName, Key.None, ModifierKeys.None)

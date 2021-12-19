@@ -85,29 +85,33 @@ namespace PixiEditor.Models.Controllers.Commands
                     continue;
                 }
 
-                CommandAttribute attribute = property.GetCustomAttribute<CommandAttribute>();
+                var attributes = property.GetCustomAttributes<CommandAttribute>();
 
-                if (attribute is null)
+                foreach (var attribute in attributes)
                 {
-                    continue;
+                    if (attribute is null)
+                    {
+                        continue;
+                    }
+
+                    Command command = new()
+                    {
+                        Name = attribute.Name,
+                        Display = attribute.Display,
+                        Key = attribute.Key,
+                        Modifiers = attribute.Modifiers,
+                        CommandParameter = attribute.CommandParameter
+                    };
+
+                    command.GetICommand = () =>
+                    {
+                        var obj = _services.GetService(type);
+
+                        return (ICommand)property.GetValue(obj);
+                    };
+
+                    yield return command;
                 }
-
-                Command command = new()
-                {
-                    Name = attribute.Name,
-                    Display = attribute.Display,
-                    Key = attribute.Key,
-                    Modifiers = attribute.Modifiers
-                };
-
-                command.GetICommand = () =>
-                {
-                    var obj = _services.GetService(type);
-
-                    return (ICommand)property.GetValue(obj);
-                };
-
-                yield return command;
             }
         }
 
