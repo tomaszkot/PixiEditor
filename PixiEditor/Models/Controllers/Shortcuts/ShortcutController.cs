@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using PixiEditor.Models.Controllers.Commands;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -6,9 +7,11 @@ namespace PixiEditor.Models.Controllers.Shortcuts
 {
     public class ShortcutController
     {
-        public ShortcutController(params ShortcutGroup[] shortcutGroups)
+        private readonly CommandController _commandController;
+
+        public ShortcutController(CommandController controller)
         {
-            ShortcutGroups = new ObservableCollection<ShortcutGroup>(shortcutGroups);
+            _commandController = controller;
         }
 
         public static bool BlockShortcutExecution { get; set; }
@@ -21,22 +24,33 @@ namespace PixiEditor.Models.Controllers.Shortcuts
         {
             if (!BlockShortcutExecution)
             {
-                Shortcut[] shortcuts = ShortcutGroups.SelectMany(x => x.Shortcuts).ToList().FindAll(x => x.ShortcutKey == key).ToArray();
-                if (shortcuts.Length < 1)
+                var command = _commandController.GetFromKeyCombination(key, modifiers);
+
+                if (command == null)
                 {
                     return;
                 }
 
-                shortcuts = shortcuts.OrderByDescending(x => x.Modifier).ToArray();
-                for (int i = 0; i < shortcuts.Length; i++)
-                {
-                    if (modifiers.HasFlag(shortcuts[i].Modifier))
-                    {
-                        shortcuts[i].Execute();
-                        LastShortcut = shortcuts[i];
-                        break;
-                    }
-                }
+                command.GetICommand().Execute(null);
+
+                LastShortcut = new Shortcut(command.Key, command.GetICommand());
+
+                //Shortcut[] shortcuts = ShortcutGroups.SelectMany(x => x.Shortcuts).ToList().FindAll(x => x.ShortcutKey == key).ToArray();
+                //if (shortcuts.Length < 1)
+                //{
+                //    return;
+                //}
+
+                //shortcuts = shortcuts.OrderByDescending(x => x.Modifier).ToArray();
+                //for (int i = 0; i < shortcuts.Length; i++)
+                //{
+                //    if (modifiers.HasFlag(shortcuts[i].Modifier))
+                //    {
+                //        shortcuts[i].Execute();
+                //        LastShortcut = shortcuts[i];
+                //        break;
+                //    }
+                //}
             }
         }
     }

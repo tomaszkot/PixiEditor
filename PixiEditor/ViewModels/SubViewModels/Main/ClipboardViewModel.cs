@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Media;
-using PixiEditor.Helpers;
+﻿using PixiEditor.Helpers;
 using PixiEditor.Models.Controllers;
-using PixiEditor.Models.DataHolders;
-using PixiEditor.Models.Position;
+using PixiEditor.Models.Controllers.Commands;
+using System.Linq;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
 {
     public class ClipboardViewModel : SubViewModel<ViewModelMain>
     {
+        [Command("PixiEditor.Copy", "Copy to Clipboard")]
         public RelayCommand CopyCommand { get; set; }
 
+        [Command("PixiEditor.Duplicate", "Duplicate")]
         public RelayCommand DuplicateCommand { get; set; }
 
+        [Command("PixiEditor.Cut", "Cut to Clipboard")]
         public RelayCommand CutCommand { get; set; }
 
+        [Command("PixiEditor.Paste", "Paste from Clipboard")]
         public RelayCommand PasteCommand { get; set; }
 
         public ClipboardViewModel(ViewModelMain owner)
