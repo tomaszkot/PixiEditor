@@ -24,12 +24,12 @@ namespace PixiEditor.Models.Controllers.Commands
 
         public class FactoryAttribute : CommandAttribute
         {
-            public Func<object> Factory { get; set; }
+            public string FactoryName { get; set; }
 
-            public FactoryAttribute(string name, string display, Func<object> factory, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
+            public FactoryAttribute(string name, string display, string factoryName, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
                 : base(name, display, key, modifiers)
             {
-                Factory = factory;
+                FactoryName = factoryName;
             }
         }
 

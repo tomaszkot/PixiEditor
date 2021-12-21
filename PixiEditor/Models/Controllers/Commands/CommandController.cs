@@ -97,6 +97,7 @@ namespace PixiEditor.Models.Controllers.Commands
 
                     Command command;
 
+                    // TODO: Implement UserInput commands
                     if (attribute is BasicAttribute basicAttr)
                     {
                         command = new BasicCommand(
@@ -106,6 +107,29 @@ namespace PixiEditor.Models.Controllers.Commands
                             () => (ICommand)property.GetValue(_services.GetService(type)),
                             basicAttr.Key,
                             basicAttr.Modifiers);
+                    }
+                    else if (attribute is FactoryAttribute factoryAttr)
+                    {
+                        MethodInfo method = type.GetMethod(factoryAttr.FactoryName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+                        Func<Command, object> factory;
+
+                        if (method.IsStatic)
+                        {
+                            factory = _ => method.Invoke(null, null);
+                        }
+                        else
+                        {
+                            factory = _ => method.Invoke(_services.GetService(type), null);
+                        }
+
+                        command = new FactoryCommand(
+                            factoryAttr.Name,
+                            factoryAttr.Display,
+                            factory,
+                            () => (ICommand)property.GetValue(_services.GetService(type)),
+                            factoryAttr.Key,
+                            factoryAttr.Modifiers);
                     }
                     else
                     {

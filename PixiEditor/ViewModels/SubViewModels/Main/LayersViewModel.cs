@@ -14,6 +14,7 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
     {
         public RelayCommand SetActiveLayerCommand { get; set; }
 
+        [Commands.Factory("PixiEditor.Layers.NewLayerCommand", "Create new empty layer", nameof(NewEmptyLayerFactory), Key.N, ModifierKeys.Control)]
         public RelayCommand NewLayerCommand { get; set; }
 
         public RelayCommand NewGroupCommand { get; set; }
@@ -341,6 +342,8 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
             int index = (int)property;
             return Owner.DocumentIsNotNull(null) && index != 0 && Owner.BitmapManager.ActiveDocument.Layers.Count(x => x.IsActive) == 1;
         }
+
+        private static Layer NewEmptyLayerFactory() => new("New Layer");
 
         private GuidStructureItem GetGroupFromParameter(object parameter)
         {
