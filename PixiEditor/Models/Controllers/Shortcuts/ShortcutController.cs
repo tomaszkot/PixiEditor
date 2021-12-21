@@ -1,6 +1,5 @@
 ﻿using PixiEditor.Models.Controllers.Commands;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace PixiEditor.Models.Controllers.Shortcuts
@@ -31,16 +30,9 @@ namespace PixiEditor.Models.Controllers.Shortcuts
                     return;
                 }
 
-                var icommand = command.GetICommand();
+                command.Execute();
 
-                if (!icommand.CanExecute(command.CommandParameter))
-                {
-                    return;
-                }
-
-                icommand.Execute(command.CommandParameter);
-
-                LastShortcut = new Shortcut(command.Key, command.GetICommand());
+                LastShortcut = new Shortcut(command.Key, () => command.Execute(), modifiers);
 
                 //Shortcut[] shortcuts = ShortcutGroups.SelectMany(x => x.Shortcuts).ToList().FindAll(x => x.ShortcutKey == key).ToArray();
                 //if (shortcuts.Length < 1)

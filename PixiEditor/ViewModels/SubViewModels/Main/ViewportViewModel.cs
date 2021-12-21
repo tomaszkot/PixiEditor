@@ -6,8 +6,8 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
 {
     public class ViewportViewModel : SubViewModel<ViewModelMain>
     {
-        [Command("PixiEditor.ZoomIn", "Zoom in", Key.OemPlus, ModifierKeys.None, CommandParameter = 1)]
-        [Command("PixiEditor.ZoomOut", "Zoom out", Key.OemMinus, ModifierKeys.None, CommandParameter = -1)]
+        [Commands.Basic("PixiEditor.Viewport.ZoomIn", "Zoom in", 1, Key.OemPlus, ModifierKeys.None)]
+        [Commands.Basic("PixiEditor.Viewport.ZoomOut", "Zoom out", -1, Key.OemMinus, ModifierKeys.None)]
         public RelayCommand ZoomCommand { get; set; }
 
         public RelayCommand ToggleGridLinesCommand { get; set; }

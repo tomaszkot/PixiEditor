@@ -58,12 +58,12 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
 
         private void ProcessShortcutDown(bool isRepeat, Key key)
         {
-            if (isRepeat && !restoreToolOnKeyUp && Owner.ShortcutController.LastShortcut != null &&
-                Owner.ShortcutController.LastShortcut.Command == Owner.ToolsSubViewModel.SelectToolCommand)
-            {
-                restoreToolOnKeyUp = true;
-                ShortcutController.BlockShortcutExecution = true;
-            }
+            //if (isRepeat && !restoreToolOnKeyUp && Owner.ShortcutController.LastShortcut != null &&
+            //    Owner.ShortcutController.LastShortcut.Command == Owner.ToolsSubViewModel.SelectToolCommand)
+            //{
+            //    restoreToolOnKeyUp = true;
+            //    ShortcutController.BlockShortcutExecution = true;
+            //}
 
             Owner.ShortcutController.KeyPressed(key, Keyboard.Modifiers);
         }

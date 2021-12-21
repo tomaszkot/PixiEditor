@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
-    [ToolCommand(Key.B, ModifierKeys.None)]
+    [Commands.Tool(Key.B, ModifierKeys.None)]
     internal class PenTool : ShapeTool
     {
         public Brush Brush { get; set; }

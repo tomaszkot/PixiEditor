@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Input;
+using static PixiEditor.Models.Controllers.Commands.Commands;
 
 namespace PixiEditor.Models.Controllers.Commands
 {
@@ -94,21 +95,22 @@ namespace PixiEditor.Models.Controllers.Commands
                         continue;
                     }
 
-                    Command command = new()
-                    {
-                        Name = attribute.Name,
-                        Display = attribute.Display,
-                        Key = attribute.Key,
-                        Modifiers = attribute.Modifiers,
-                        CommandParameter = attribute.CommandParameter
-                    };
+                    Command command;
 
-                    command.GetICommand = () =>
+                    if (attribute is BasicAttribute basicAttr)
                     {
-                        var obj = _services.GetService(type);
-
-                        return (ICommand)property.GetValue(obj);
-                    };
+                        command = new BasicCommand(
+                            basicAttr.Name,
+                            basicAttr.Display,
+                            basicAttr.Parameter,
+                            () => (ICommand)property.GetValue(_services.GetService(type)),
+                            basicAttr.Key,
+                            basicAttr.Modifiers);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
 
                     yield return command;
                 }
@@ -117,7 +119,7 @@ namespace PixiEditor.Models.Controllers.Commands
 
         private Command GetToolCommand(Type type)
         {
-            var attribute = type.GetCustomAttribute<ToolCommandAttribute>();
+            var attribute = type.GetCustomAttribute<ToolAttribute>();
 
             if (attribute == null)
             {
@@ -135,26 +137,17 @@ namespace PixiEditor.Models.Controllers.Commands
 
             string name = $"PixiEditor.Tools.{ToolHelpers.GetToolName(type)}";
 
-            return new Command()
-            {
-                Name = name,
-                Display = displayName,
-                Key = attribute.Key,
-                Modifiers = attribute.Modifiers,
-                GetICommand = () =>
-                {
-                    return _services.GetRequiredService<ToolsViewModel>().SelectToolCommand;
-                },
-                CommandParameter = type
-            };
+            return new BasicCommand(
+                name,
+                displayName,
+                type,
+                () => _services.GetRequiredService<ToolsViewModel>().SelectToolCommand,
+                attribute.Key,
+                attribute.Modifiers);
         }
 
-        public class Command
+        public abstract class Command
         {
-            public Func<ICommand> GetICommand { get; set; }
-
-            public object CommandParameter { get; set; }
-
             public string Name { get; set; }
 
             public string Display { get; set; }
@@ -162,6 +155,72 @@ namespace PixiEditor.Models.Controllers.Commands
             public Key Key { get; set; }
 
             public ModifierKeys Modifiers { get; set; }
+
+            public Func<ICommand> GetCommand { get; init; }
+
+            protected Command(string name, string display, Key key, ModifierKeys modifiers, Func<ICommand> getCommand)
+            {
+                Name = name;
+                Display = display;
+                Key = key;
+                Modifiers = modifiers;
+                GetCommand = getCommand;
+            }
+
+            public virtual void Execute()
+            {
+                OnExecute(GetCommand());
+            }
+
+            protected virtual void OnExecute(ICommand command)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class BasicCommand : Command
+        {
+            public object Parameter { get; set; }
+
+            public BasicCommand(string name, string display, object parameter, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
+                : base(name, display, key, modifiers, getCommand)
+            {
+                Parameter = parameter;
+            }
+
+            protected override void OnExecute(ICommand command)
+            {
+                if (command.CanExecute(Parameter))
+                {
+                    command.Execute(Parameter);
+                }
+            }
+        }
+
+        public class FactoryCommand : Command
+        {
+            public Func<Command, object> ParameterFactory { get; set; }
+
+            public FactoryCommand(string name, string display, Func<Command, object> parameterFactory, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
+                : base(name, display, key, modifiers, getCommand)
+            {
+                ParameterFactory = parameterFactory;
+            }
+
+            public FactoryCommand(string name, string display, Func<object> parameterFactory, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
+                : this(name, display, _ => parameterFactory(), getCommand, key, modifiers)
+            {
+            }
+
+            protected override void OnExecute(ICommand command)
+            {
+                object parameter = ParameterFactory(this);
+
+                if (command.CanExecute(parameter))
+                {
+                    command.Execute(parameter);
+                }
+            }
         }
     }
 }
