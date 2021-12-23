@@ -32,7 +32,7 @@ namespace PixiEditor.Models.Controllers.Shortcuts
 
                 command.Execute();
 
-                LastShortcut = new Shortcut(command.Key, () => command.Execute(), modifiers);
+                LastShortcut = new Shortcut(key, () => command.Execute(), modifiers);
 
                 //Shortcut[] shortcuts = ShortcutGroups.SelectMany(x => x.Shortcuts).ToList().FindAll(x => x.ShortcutKey == key).ToArray();
                 //if (shortcuts.Length < 1)

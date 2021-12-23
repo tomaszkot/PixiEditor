@@ -13,19 +13,17 @@ namespace PixiEditor.Models.Controllers.Commands
     public class CommandController
     {
         private readonly IServiceProvider _services;
-        private List<Command> _commands;
-        private Dictionary<(Key, ModifierKeys), Command> _commandsByKey;
+        private CommandCollection _commands;
 
         public CommandController(IServiceProvider services)
         {
             _services = services;
             _commands = new();
-            _commandsByKey = new();
         }
 
         public Command GetFromKeyCombination(Key key, ModifierKeys modifiers)
         {
-            _ = _commandsByKey.TryGetValue((key, modifiers), out Command command);
+            _ = _commands.TryGetValue(new KeyCombination(key, modifiers), out Command command);
 
             return command;
         }
@@ -46,16 +44,6 @@ namespace PixiEditor.Models.Controllers.Commands
                 var commands = GetCommands(type);
 
                 _commands.AddRange(commands);
-
-                foreach (var command in commands)
-                {
-                    if (command.Key == Key.None && command.Modifiers == ModifierKeys.None)
-                    {
-                        continue;
-                    }
-
-                    _commandsByKey.Add((command.Key, command.Modifiers), command);
-                }
             }
         }
 
@@ -71,7 +59,6 @@ namespace PixiEditor.Models.Controllers.Commands
                 }
 
                 _commands.Add(command);
-                _commandsByKey.Add((command.Key, command.Modifiers), command);
 
                 continue;
             }
@@ -168,83 +155,6 @@ namespace PixiEditor.Models.Controllers.Commands
                 () => _services.GetRequiredService<ToolsViewModel>().SelectToolCommand,
                 attribute.Key,
                 attribute.Modifiers);
-        }
-
-        public abstract class Command
-        {
-            public string Name { get; set; }
-
-            public string Display { get; set; }
-
-            public Key Key { get; set; }
-
-            public ModifierKeys Modifiers { get; set; }
-
-            public Func<ICommand> GetCommand { get; init; }
-
-            protected Command(string name, string display, Key key, ModifierKeys modifiers, Func<ICommand> getCommand)
-            {
-                Name = name;
-                Display = display;
-                Key = key;
-                Modifiers = modifiers;
-                GetCommand = getCommand;
-            }
-
-            public virtual void Execute()
-            {
-                OnExecute(GetCommand());
-            }
-
-            protected virtual void OnExecute(ICommand command)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class BasicCommand : Command
-        {
-            public object Parameter { get; set; }
-
-            public BasicCommand(string name, string display, object parameter, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
-                : base(name, display, key, modifiers, getCommand)
-            {
-                Parameter = parameter;
-            }
-
-            protected override void OnExecute(ICommand command)
-            {
-                if (command.CanExecute(Parameter))
-                {
-                    command.Execute(Parameter);
-                }
-            }
-        }
-
-        public class FactoryCommand : Command
-        {
-            public Func<Command, object> ParameterFactory { get; set; }
-
-            public FactoryCommand(string name, string display, Func<Command, object> parameterFactory, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
-                : base(name, display, key, modifiers, getCommand)
-            {
-                ParameterFactory = parameterFactory;
-            }
-
-            public FactoryCommand(string name, string display, Func<object> parameterFactory, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
-                : this(name, display, _ => parameterFactory(), getCommand, key, modifiers)
-            {
-            }
-
-            protected override void OnExecute(ICommand command)
-            {
-                object parameter = ParameterFactory(this);
-
-                if (command.CanExecute(parameter))
-                {
-                    command.Execute(parameter);
-                }
-            }
         }
     }
 }
