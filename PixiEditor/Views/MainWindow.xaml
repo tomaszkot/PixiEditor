@@ -439,5 +439,10 @@
                        Foreground="White" FontSize="14"  Text="{Binding UpdateSubViewModel.VersionText}" />
             </StackPanel>
         </Grid>
+        <usercontrols:CommandControl Grid.ColumnSpan="999" Grid.RowSpan="999" 
+                                     HorizontalAlignment="Center" VerticalAlignment="Top"
+                                     Margin="0,50,0,0"
+                                     Width="200" Height="200"
+                                     ExecuteCommand="{Binding DataContext.CommandController.ExecuteCommandCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
     </Grid>
 </Window>

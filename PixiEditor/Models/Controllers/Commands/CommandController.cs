@@ -13,17 +13,21 @@ namespace PixiEditor.Models.Controllers.Commands
     public class CommandController
     {
         private readonly IServiceProvider _services;
-        private CommandCollection _commands;
+
+        public CommandCollection Commands { get; }
+
+        public RelayCommand ExecuteCommandCommand { get; }
 
         public CommandController(IServiceProvider services)
         {
             _services = services;
-            _commands = new();
+            ExecuteCommandCommand = new RelayCommand(x => ((Command)x).Execute());
+            Commands = new();
         }
 
         public Command GetFromKeyCombination(Key key, ModifierKeys modifiers)
         {
-            _ = _commands.TryGetValue(new KeyCombination(key, modifiers), out Command command);
+            _ = Commands.TryGetValue(new KeyCombination(key, modifiers), out Command command);
 
             return command;
         }
@@ -43,7 +47,7 @@ namespace PixiEditor.Models.Controllers.Commands
 
                 var commands = GetCommands(type);
 
-                _commands.AddRange(commands);
+                Commands.AddRange(commands);
             }
         }
 
@@ -58,7 +62,7 @@ namespace PixiEditor.Models.Controllers.Commands
                     continue;
                 }
 
-                _commands.Add(command);
+                Commands.Add(command);
 
                 continue;
             }

@@ -1,13 +1,32 @@
 ﻿using PixiEditor.Helpers;
 using System;
+using System.Diagnostics;
+using System.Text;
 using System.Windows.Input;
 
 #pragma warning disable SA1402 // File may only contain a single type
 namespace PixiEditor.Models.Controllers.Commands
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class Command : NotifyableObject
     {
         private KeyCombination shortcut;
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                StringBuilder builder = new($"{Display} ({Name})");
+
+                if (Shortcut != KeyCombination.None)
+                {
+                    builder.Append(' ');
+                    builder.Append(Shortcut);
+                }
+
+                return builder.ToString();
+            }
+        }
 
         public string Name { get; init; }
 
@@ -47,6 +66,8 @@ namespace PixiEditor.Models.Controllers.Commands
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString() => Display;
     }
 
     public delegate void CommandShortcutChanged(Command command, CommandShortcutChangedEventArgs args);

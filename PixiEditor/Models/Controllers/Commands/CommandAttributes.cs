@@ -15,7 +15,7 @@ namespace PixiEditor.Models.Controllers.Commands
             {
             }
 
-            public BasicAttribute(string name, string display, object parameter = null, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
+            public BasicAttribute(string name, string display, object parameter, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
                 : base(name, display, key, modifiers)
             {
                 Parameter = parameter;

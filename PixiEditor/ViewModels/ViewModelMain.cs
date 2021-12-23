@@ -77,6 +77,8 @@ namespace PixiEditor.ViewModels
 
         public WindowViewModel WindowSubViewModel { get; set; }
 
+        public CommandController CommandController { get; set; }
+
         public IPreferences Preferences { get; set; }
 
         public string ActionDisplay
@@ -222,9 +224,9 @@ namespace PixiEditor.ViewModels
 
             BitmapManager.PrimaryColor = ColorsSubViewModel.PrimaryColor;
 
-            var commandController = services.GetRequiredService<CommandController>();
+            CommandController = services.GetRequiredService<CommandController>();
 
-            commandController.Init();
+            CommandController.Init();
         }
 
         /// <summary>

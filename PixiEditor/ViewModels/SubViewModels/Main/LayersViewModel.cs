@@ -14,23 +14,30 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
     {
         public RelayCommand SetActiveLayerCommand { get; set; }
 
-        [Commands.Factory("PixiEditor.Layers.NewLayerCommand", "Create new empty layer", nameof(NewEmptyLayerFactory), Key.N, ModifierKeys.Control)]
+        [Commands.Basic("PixiEditor.Layers.NewLayerCommand", "Create new empty layer")]
         public RelayCommand NewLayerCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Layers.NewGroupCommand", "Create new group")]
         public RelayCommand NewGroupCommand { get; set; }
 
         public RelayCommand CreateGroupFromActiveLayersCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Layers.DeleteSelected", "Delete selected item")]
         public RelayCommand DeleteSelectedCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Layers.DeleteSelectedGroup", "Delete selected group")]
         public RelayCommand DeleteGroupCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Layers.DeleteSelectedLayers", "Delete selected layers")]
         public RelayCommand DeleteLayersCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Layers.DuplicateSelected", "Delete selected item")]
         public RelayCommand DuplicateLayerCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Layers.RenameSelectedLayer", "Rename selected item", Key.F2)]
         public RelayCommand RenameLayerCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Layers.RenameSelectedGroup", "Rename selected item")]
         public RelayCommand RenameGroupCommand { get; set; }
 
         public RelayCommand MoveToBackCommand { get; set; }
@@ -342,8 +349,6 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
             int index = (int)property;
             return Owner.DocumentIsNotNull(null) && index != 0 && Owner.BitmapManager.ActiveDocument.Layers.Count(x => x.IsActive) == 1;
         }
-
-        private static Layer NewEmptyLayerFactory() => new("New Layer");
 
         private GuidStructureItem GetGroupFromParameter(object parameter)
         {
