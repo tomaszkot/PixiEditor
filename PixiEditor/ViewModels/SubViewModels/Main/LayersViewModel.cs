@@ -2,7 +2,6 @@
 using PixiEditor.Models.Controllers;
 using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.Layers;
-using PixiEditor.Models.Undo;
 using PixiEditor.Views.UserControls.Layers;
 using System;
 using System.Linq;

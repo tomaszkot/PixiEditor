@@ -1,14 +1,18 @@
 ﻿using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.Undo;
 using System;
 using System.IO;
+using System.Windows.Input;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
 {
     public class UndoViewModel : SubViewModel<ViewModelMain>
     {
+        [Commands.Basic("PixiEditor.Undo.Undo", "Undo", Key.Z, ModifierKeys.Control)]
         public RelayCommand UndoCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Undo.Redo", "Redo", Key.Y, ModifierKeys.Control)]
         public RelayCommand RedoCommand { get; set; }
 
         public event EventHandler UndoRedoCalled;

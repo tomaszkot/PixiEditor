@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using PixiEditor.Exceptions;
 using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.DataHolders;
 using PixiEditor.Models.Dialogs;
 using PixiEditor.Models.IO;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
@@ -21,12 +23,17 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
     {
         private bool hasRecent;
 
+        [Commands.Basic("PixiEditor.File.NewDocumentPopup", "New document", Key.N, ModifierKeys.Control)]
         public RelayCommand OpenNewFilePopupCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.File.SaveDocument", "Save document", Key.S, ModifierKeys.Control)]
+        [Commands.Basic("PixiEditor.File.SaveDocumentAsNew", "Save document as new", "asnew", Key.S, ModifierKeys.Control | ModifierKeys.Shift)]
         public RelayCommand SaveDocumentCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.File.OpenFile", "Open file", Key.O, ModifierKeys.Control)]
         public RelayCommand OpenFileCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.File.ExportFile", "Export file", Key.E, ModifierKeys.Control)]
         public RelayCommand ExportFileCommand { get; set; } // Command that is used to save file
 
         public RelayCommand OpenRecentCommand { get; set; }

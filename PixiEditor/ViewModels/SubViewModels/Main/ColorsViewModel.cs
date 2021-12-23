@@ -1,11 +1,14 @@
 ﻿using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers.Commands;
 using SkiaSharp;
 using System;
+using System.Windows.Input;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
 {
     public class ColorsViewModel : SubViewModel<ViewModelMain>
     {
+        [Commands.Basic("PixiEditor.Colors.SwapColors", "Swap Colors", Key.X)]
         public RelayCommand SwapColorsCommand { get; set; }
 
         public RelayCommand SelectColorCommand { get; set; }

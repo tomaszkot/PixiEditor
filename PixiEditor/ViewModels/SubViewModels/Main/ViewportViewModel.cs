@@ -10,6 +10,7 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
         [Commands.Basic("PixiEditor.Viewport.ZoomOut", "Zoom out", -1, Key.OemMinus, ModifierKeys.None)]
         public RelayCommand ZoomCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Viewport.ToggleGrid", "Toggle grid lines", Key.OemTilde)]
         public RelayCommand ToggleGridLinesCommand { get; set; }
 
         private bool gridLinesEnabled = false;

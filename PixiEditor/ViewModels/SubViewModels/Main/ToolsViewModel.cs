@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.Enums;
 using PixiEditor.Models.Events;
 using PixiEditor.Models.Tools;
@@ -19,6 +20,8 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
 
         public RelayCommand SelectToolCommand { get; set; } // Command that handles tool switching.
 
+        [Commands.Basic("PixiEditor.Tools.IncreaseToolSize", "Increase Tool Size", 1)]
+        [Commands.Basic("PixiEditor.Tools.DecreaseToolSize", "Increase Tool Size", -1)]
         public RelayCommand ChangeToolSizeCommand { get; set; }
 
         public Tool LastActionTool { get; private set; }

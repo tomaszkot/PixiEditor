@@ -1,7 +1,9 @@
 ﻿using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.DataHolders;
 using PixiEditor.Models.Dialogs;
 using PixiEditor.Models.Enums;
+using System.Windows.Input;
 using System.Linq;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
@@ -14,11 +16,15 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
 
         public RelayCommand ClipCanvasCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Document.DeletePixels", "Delete selected pixels", Key.Delete)]
         public RelayCommand DeletePixelsCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Document.OpenResizeDocumentPopup", "Resize Document")]
+        [Commands.Basic("PixiEditor.Document.OpenResizeCanvasPopup", "Resize Canvas", "canvas")]
         public RelayCommand OpenResizePopupCommand { get; set; }
 
         public RelayCommand RotateToRightCommand { get; set; }
+
         public RelayCommand FlipCommand { get; set; }
 
         public DocumentViewModel(ViewModelMain owner)

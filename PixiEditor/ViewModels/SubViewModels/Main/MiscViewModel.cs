@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PixiEditor.Helpers;
+﻿using PixiEditor.Helpers;
 using PixiEditor.Views.Dialogs;
+using System.Diagnostics;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
 {

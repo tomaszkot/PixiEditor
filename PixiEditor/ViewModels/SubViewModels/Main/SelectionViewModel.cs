@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.DataHolders;
 using PixiEditor.Models.Enums;
 using PixiEditor.Models.Position;
@@ -11,8 +12,10 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
 {
     public class SelectionViewModel : SubViewModel<ViewModelMain>
     {
+        [Commands.Basic("PixiEditor.Selection.DeselectAll", "Deselect all")]
         public RelayCommand DeselectCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Selection.SelectAll", "Select all")]
         public RelayCommand SelectAllCommand { get; set; }
 
         private readonly SelectTool selectTool;
