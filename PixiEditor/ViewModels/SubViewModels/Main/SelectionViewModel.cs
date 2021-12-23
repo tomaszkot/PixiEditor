@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using PixiEditor.Helpers;
+﻿using PixiEditor.Helpers;
 using PixiEditor.Models.Controllers.Commands;
-using PixiEditor.Models.DataHolders;
 using PixiEditor.Models.Enums;
 using PixiEditor.Models.Position;
-using PixiEditor.Models.Tools;
 using PixiEditor.Models.Tools.Tools;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
 {
     public class SelectionViewModel : SubViewModel<ViewModelMain>
     {
-        [Commands.Basic("PixiEditor.Selection.DeselectAll", "Deselect all")]
-        public RelayCommand DeselectCommand { get; set; }
+        private readonly SelectTool selectTool;
 
-        [Commands.Basic("PixiEditor.Selection.SelectAll", "Select all")]
+        [Commands.Basic("PixiEditor.Selection.SelectAll", "Select all", Key.A, ModifierKeys.Control)]
         public RelayCommand SelectAllCommand { get; set; }
 
-        private readonly SelectTool selectTool;
+        [Commands.Basic("PixiEditor.Selection.DeselectAll", "Deselect all", Key.D, ModifierKeys.Control)]
+        public RelayCommand DeselectCommand { get; set; }
 
         public SelectionViewModel(ViewModelMain owner)
             : base(owner)
