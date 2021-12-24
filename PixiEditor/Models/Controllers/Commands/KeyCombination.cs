@@ -30,7 +30,7 @@ namespace PixiEditor.Models.Controllers.Commands
 
             if (Key != Key.None)
             {
-                builder.Append(InputKeyHelpers.GetCharFromKey(Key));
+                builder.Append(InputKeyHelpers.GetStringFromKey(Key));
             }
 
             return builder.ToString();

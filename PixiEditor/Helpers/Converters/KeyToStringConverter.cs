@@ -11,7 +11,7 @@ namespace PixiEditor.Helpers.Converters
         {
             if (value is Key key)
             {
-                return InputKeyHelpers.GetCharFromKey(key);
+                return InputKeyHelpers.GetStringFromKey(key);
             }
             else if (value is ModifierKeys)
             {

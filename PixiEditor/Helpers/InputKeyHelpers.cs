@@ -1,15 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace PixiEditor.Helpers
 {
     public static class InputKeyHelpers
     {
+        /// <summary>
+        /// Returns a string representing the <paramref name="key"/> mapped to the users keyboard layout
+        /// </summary>
+        public static string GetStringFromKey(Key key)
+        {
+            // Without this check the method would return a single whitespace
+            if (key == Key.Space)
+            {
+                return nameof(Key.Space);
+            }
+
+            return GetCharFromKey(key);
+        }
+
+        /// <summary>
+        /// Returns the charcter of the <paramref name="key"/> mapped to the users keyboard layout
+        /// </summary>
         public static string GetCharFromKey(Key key)
         {
             int virtualKey = KeyInterop.VirtualKeyFromKey(key);
@@ -17,7 +30,7 @@ namespace PixiEditor.Helpers
             GetKeyboardState(keyboardState);
 
             uint scanCode = MapVirtualKeyW((uint)virtualKey, MapType.MAPVK_VK_TO_VSC);
-            StringBuilder stringBuilder = new (3);
+            StringBuilder stringBuilder = new(3);
 
             int result = ToUnicode((uint)virtualKey, scanCode, keyboardState, stringBuilder, stringBuilder.Capacity, 0);
 
