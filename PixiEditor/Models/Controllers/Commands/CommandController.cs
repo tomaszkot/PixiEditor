@@ -4,6 +4,7 @@ using PixiEditor.Models.Tools;
 using PixiEditor.ViewModels.SubViewModels.Main;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Input;
 using static PixiEditor.Models.Controllers.Commands.Commands;
@@ -86,18 +87,33 @@ namespace PixiEditor.Models.Controllers.Commands
                         continue;
                     }
 
-                    Command command;
+                    Command command = null;
 
                     // TODO: Implement UserInput commands
                     if (attribute is BasicAttribute basicAttr)
                     {
-                        command = new BasicCommand(
-                            basicAttr.Name,
-                            basicAttr.Display,
-                            basicAttr.Parameter,
-                            () => (ICommand)property.GetValue(_services.GetService(type)),
-                            basicAttr.Key,
-                            basicAttr.Modifiers);
+                        if (basicAttr is DebugAttribute debugAttr)
+                        {
+                            AddDebugCommand(
+                                new BasicCommand(
+                                    debugAttr.Name,
+                                    debugAttr.Display,
+                                    debugAttr.Parameter,
+                                    () => (ICommand)property.GetValue(_services.GetService(type)),
+                                    debugAttr.Key,
+                                    debugAttr.Modifiers),
+                                ref command);
+                        }
+                        else
+                        {
+                            command = new BasicCommand(
+                                    basicAttr.Name,
+                                    basicAttr.Display,
+                                    basicAttr.Parameter,
+                                    () => (ICommand)property.GetValue(_services.GetService(type)),
+                                    basicAttr.Key,
+                                    basicAttr.Modifiers);
+                        }
                     }
                     else if (attribute is FactoryAttribute factoryAttr)
                     {
@@ -125,6 +141,11 @@ namespace PixiEditor.Models.Controllers.Commands
                     else
                     {
                         throw new NotImplementedException();
+                    }
+
+                    if (command == null)
+                    {
+                        continue;
                     }
 
                     yield return command;
@@ -159,6 +180,12 @@ namespace PixiEditor.Models.Controllers.Commands
                 () => _services.GetRequiredService<ToolsViewModel>().SelectToolCommand,
                 attribute.Key,
                 attribute.Modifiers);
+        }
+
+        [Conditional("DEBUG")]
+        private static void AddDebugCommand(Command command, ref Command outputCommand)
+        {
+            outputCommand = command;
         }
     }
 }

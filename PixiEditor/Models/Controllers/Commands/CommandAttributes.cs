@@ -44,6 +44,12 @@ namespace PixiEditor.Models.Controllers.Commands
             }
         }
 
+        public class DebugAttribute : BasicAttribute
+        {
+            public DebugAttribute(string name, string display, object parameter = null, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None) : base(name, display, parameter, key, modifiers)
+            { }
+        }
+
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
         public class ToolAttribute : CommandAttribute
         {
