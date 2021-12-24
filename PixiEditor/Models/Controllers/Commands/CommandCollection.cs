@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace PixiEditor.Models.Controllers.Commands
 {
@@ -9,9 +8,9 @@ namespace PixiEditor.Models.Controllers.Commands
         private readonly Dictionary<KeyCombination, Command> _commandsByShortcut;
         private readonly Dictionary<string, Command> _commandsByName;
 
-        public Command this[KeyCombination key] { get => _commandsByShortcut[key]; set => _commandsByShortcut[key] = value; }
+        public Command this[KeyCombination shortcut] { get => _commandsByShortcut[shortcut]; set => _commandsByShortcut[shortcut] = value; }
 
-        public Command this[string key] { get => _commandsByName[key]; set => _commandsByName[key] = value; }
+        public Command this[string name] { get => _commandsByName[name]; set => _commandsByName[name] = value; }
 
         public ICollection<KeyCombination> Keys => _commandsByShortcut.Keys;
 
@@ -59,11 +58,12 @@ namespace PixiEditor.Models.Controllers.Commands
             _commandsByName.Clear();
         }
 
-        public bool Remove(KeyCombination keyCombination)
+        public bool Remove(KeyCombination shortcut)
         {
-            if (_commandsByShortcut.Remove(keyCombination, out Command command))
+            if (_commandsByShortcut.Remove(shortcut, out Command command))
             {
                 _commandsByName.Remove(command.Name);
+                command.ShortcutChanged -= Command_ShortcutChanged;
                 return true;
             }
 
@@ -75,15 +75,16 @@ namespace PixiEditor.Models.Controllers.Commands
             if (_commandsByName.Remove(name, out Command command))
             {
                 _commandsByShortcut.Remove(command.Shortcut);
+                command.ShortcutChanged -= Command_ShortcutChanged;
                 return true;
             }
 
             return false;
         }
 
-        public bool TryGetValue(KeyCombination keyCombination, out Command command)
+        public bool TryGetValue(KeyCombination shortcut, out Command command)
         {
-            return _commandsByShortcut.TryGetValue(keyCombination, out command);
+            return _commandsByShortcut.TryGetValue(shortcut, out command);
         }
 
         public bool TryGetValue(string name, out Command command)
@@ -96,9 +97,9 @@ namespace PixiEditor.Models.Controllers.Commands
             _commandsByName.Values.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(Command item)
+        public bool Remove(Command command)
         {
-            return Remove(item.Name);
+            return Remove(command.Name);
         }
 
         public IEnumerator<Command> GetEnumerator() => _commandsByName.Values.GetEnumerator();

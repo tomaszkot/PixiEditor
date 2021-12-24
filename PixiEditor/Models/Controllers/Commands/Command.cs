@@ -49,11 +49,11 @@ namespace PixiEditor.Models.Controllers.Commands
 
         public Func<ICommand> GetCommand { get; init; }
 
-        protected Command(string name, string display, Key key, ModifierKeys modifiers, Func<ICommand> getCommand)
+        protected Command(string name, string display, KeyCombination shortcut, Func<ICommand> getCommand)
         {
             Name = name;
             Display = display;
-            Shortcut = new(key, modifiers);
+            Shortcut = shortcut;
             GetCommand = getCommand;
         }
 
@@ -83,8 +83,8 @@ namespace PixiEditor.Models.Controllers.Commands
     {
         public object Parameter { get; init; }
 
-        public BasicCommand(string name, string display, object parameter, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
-            : base(name, display, key, modifiers, getCommand)
+        public BasicCommand(string name, string display, object parameter, Func<ICommand> getCommand, KeyCombination shortcut = default)
+            : base(name, display, shortcut, getCommand)
         {
             Parameter = parameter;
         }
@@ -102,14 +102,14 @@ namespace PixiEditor.Models.Controllers.Commands
     {
         public Func<Command, object> ParameterFactory { get; init; }
 
-        public FactoryCommand(string name, string display, Func<Command, object> parameterFactory, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
-            : base(name, display, key, modifiers, getCommand)
+        public FactoryCommand(string name, string display, Func<Command, object> parameterFactory, Func<ICommand> getCommand, KeyCombination shortcut = default)
+            : base(name, display, shortcut, getCommand)
         {
             ParameterFactory = parameterFactory;
         }
 
-        public FactoryCommand(string name, string display, Func<object> parameterFactory, Func<ICommand> getCommand, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
-            : this(name, display, _ => parameterFactory(), getCommand, key, modifiers)
+        public FactoryCommand(string name, string display, Func<object> parameterFactory, Func<ICommand> getCommand, KeyCombination shortcut = default)
+            : this(name, display, _ => parameterFactory(), getCommand, shortcut)
         {
         }
 

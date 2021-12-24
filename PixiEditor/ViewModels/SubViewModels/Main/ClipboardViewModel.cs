@@ -8,16 +8,16 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
 {
     public class ClipboardViewModel : SubViewModel<ViewModelMain>
     {
-        [Commands.Basic("PixiEditor.Copy", "Copy to Clipboard", Key.C, ModifierKeys.Control)]
+        [Commands.Basic("PixiEditor.Clipboard.Copy", "Copy to Clipboard", Key.C, ModifierKeys.Control)]
         public RelayCommand CopyCommand { get; set; }
 
-        [Commands.Basic("PixiEditor.Duplicate", "Duplicate", Key.J, ModifierKeys.Control)]
+        [Commands.Basic("PixiEditor.Clipboard.Duplicate", "Duplicate", Key.J, ModifierKeys.Control)]
         public RelayCommand DuplicateCommand { get; set; }
 
-        [Commands.Basic("PixiEditor.Cut", "Cut to Clipboard", Key.X, ModifierKeys.Control)]
+        [Commands.Basic("PixiEditor.Clipboard.Cut", "Cut to Clipboard", Key.X, ModifierKeys.Control)]
         public RelayCommand CutCommand { get; set; }
 
-        [Commands.Basic("PixiEditor.Paste", "Paste from Clipboard", Key.V, ModifierKeys.Control)]
+        [Commands.Basic("PixiEditor.Clipboard.Paste", "Paste from Clipboard", Key.V, ModifierKeys.Control)]
         public RelayCommand PasteCommand { get; set; }
 
         public ClipboardViewModel(ViewModelMain owner)

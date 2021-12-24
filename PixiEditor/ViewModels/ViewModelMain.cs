@@ -173,7 +173,8 @@ namespace PixiEditor.ViewModels
 
             BitmapManager.PrimaryColor = ColorsSubViewModel.PrimaryColor;
 
-            CommandController.Init();
+            CommandController.Init(ShortcutController.GetShortcut);
+            //ShortcutController.UpdateShortcut(CommandController.Commands["PixiEditor.Clipboard.Paste"], new KeyCombination(Key.U, ModifierKeys.Shift));
         }
 
         /// <summary>
