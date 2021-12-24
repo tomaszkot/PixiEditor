@@ -1,13 +1,16 @@
 ﻿using PixiEditor.Helpers.Extensions;
 using PixiEditor.Models.Controllers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.Layers;
 using PixiEditor.Models.Position;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.G)]
     internal class FloodFillTool : BitmapOperationTool
     {
         private BitmapManager BitmapManager { get; }

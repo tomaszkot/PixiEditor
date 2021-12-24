@@ -1,4 +1,5 @@
 ﻿using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.Layers;
 using PixiEditor.Models.Position;
 using PixiEditor.Models.Tools.ToolSettings.Settings;
@@ -7,9 +8,11 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.L)]
     public class LineTool : ShapeTool
     {
         private List<Coordinates> linePoints = new List<Coordinates>();

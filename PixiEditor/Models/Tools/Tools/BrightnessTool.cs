@@ -6,13 +6,16 @@ using PixiEditor.Models.Layers;
 using PixiEditor.Models.Position;
 using PixiEditor.Models.Tools.ToolSettings.Settings;
 using PixiEditor.Models.Tools.ToolSettings.Toolbars;
+using PixiEditor.Models.Controllers.Commands;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.U)]
     public class BrightnessTool : BitmapOperationTool
     {
         private const float CorrectionFactor = 5f; // Initial correction factor

@@ -1,5 +1,6 @@
 using PixiEditor.Models.Controllers;
 using PixiEditor.Models.DataHolders;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.ImageManipulation;
 using PixiEditor.Models.Layers;
 using PixiEditor.Models.Position;
@@ -8,9 +9,11 @@ using PixiEditor.ViewModels;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.O)]
     internal class ColorPickerTool : ReadonlyTool
     {
         private readonly DocumentProvider _docProvider;

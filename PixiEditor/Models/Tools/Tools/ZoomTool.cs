@@ -1,19 +1,19 @@
 ﻿using PixiEditor.Models.Controllers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.Position;
 using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.Z)]
     internal class ZoomTool : ReadonlyTool
     {
-        private BitmapManager BitmapManager { get; }
-        private string defaultActionDisplay = "Click and move to zoom. Click to zoom in, hold ctrl and click to zoom out.";
+        const string defaultActionDisplay = "Click and move to zoom. Click to zoom in, hold ctrl and click to zoom out.";
 
         public ZoomTool(BitmapManager bitmapManager)
         {
             ActionDisplay = defaultActionDisplay;
-            BitmapManager = bitmapManager;
         }
 
         public override bool HideHighlight => true;

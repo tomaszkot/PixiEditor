@@ -1,20 +1,17 @@
-﻿using PixiEditor.Models.Position;
-using PixiEditor.ViewModels.SubViewModels.Main;
+﻿using PixiEditor.Models.Controllers.Commands;
+using PixiEditor.Models.Position;
 using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.Space)]
     public class MoveViewportTool : ReadonlyTool
     {
-        private ToolsViewModel ToolsViewModel { get; }
-
-        public MoveViewportTool(ToolsViewModel toolsViewModel)
+        public MoveViewportTool()
         {
             Cursor = Cursors.SizeAll;
             ActionDisplay = "Click and move to pan viewport.";
-
-            ToolsViewModel = toolsViewModel;
         }
 
         public override bool HideHighlight => true;

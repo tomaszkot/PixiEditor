@@ -1,5 +1,6 @@
 ﻿using PixiEditor.Helpers;
 using PixiEditor.Models.Controllers;
+using PixiEditor.Models.Controllers.Commands;
 using PixiEditor.Models.DataHolders;
 using PixiEditor.Models.Enums;
 using PixiEditor.Models.ImageManipulation;
@@ -14,6 +15,7 @@ using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.V)]
     internal class MoveTool : BitmapOperationTool
     {
         private Layer[] affectedLayers;

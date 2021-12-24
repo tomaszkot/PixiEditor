@@ -53,14 +53,18 @@ namespace PixiEditor.Models.Controllers.Commands
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
         public class ToolAttribute : CommandAttribute
         {
-            public ToolAttribute(Key key, ModifierKeys modifiers)
+            public ToolAttribute()
+                : base(Key.None, ModifierKeys.None)
+            { }
+
+            public ToolAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None)
                 : base(key, modifiers) // Name and Display are set by CommandManager
             {
                 Key = key;
                 Modifiers = modifiers;
             }
 
-            public ToolAttribute(string displayName, Key key, ModifierKeys modifiers)
+            public ToolAttribute(string displayName, Key key, ModifierKeys modifiers = ModifierKeys.None)
                 : this(key, modifiers)
             {
                 Display = displayName;

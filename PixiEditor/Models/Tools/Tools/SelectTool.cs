@@ -11,9 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SkiaSharp;
+using PixiEditor.Models.Controllers.Commands;
+using System.Windows.Input;
 
 namespace PixiEditor.Models.Tools.Tools
 {
+    [Commands.Tool(Key.M)]
     internal class SelectTool : ReadonlyTool
     {
         private readonly RectangleTool rectangleTool;
