@@ -41,6 +41,7 @@ namespace PixiEditor.Helpers.Extensions
                 .AddSingleton<MiscViewModel>()
                 .AddSingleton(x => new DiscordViewModel(x.GetService<ViewModelMain>(), "764168193685979138"))
                 .AddSingleton<DebugViewModel>()
+                .AddSingleton<CommandViewModel>()
                 // Controllers
                 .AddSingleton<BitmapManager>()
                 .AddSingleton<CommandController>()

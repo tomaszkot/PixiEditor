@@ -452,6 +452,9 @@
                                      HorizontalAlignment="Center" VerticalAlignment="Top"
                                      Margin="0,50,0,0"
                                      MinWidth="450" FontSize="18"
-                                     ExecuteCommand="{Binding DataContext.CommandController.ExecuteCommandCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                     Visibility="{Binding DataContext.CommandViewModel.SearchWindowVisible,
+                                                          RelativeSource={RelativeSource AncestorType=Window},
+                                                          Converter={BoolToVisibilityConverter},
+                                                          Mode=TwoWay}"/>
     </Grid>
 </Window>

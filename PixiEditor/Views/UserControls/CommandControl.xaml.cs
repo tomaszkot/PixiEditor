@@ -4,6 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace PixiEditor.Views.UserControls
 {
@@ -23,8 +24,16 @@ namespace PixiEditor.Views.UserControls
 
         public CommandControl()
         {
-            DataContext = new CommandControlViewModel(ViewModelMain.Current.CommandController);
+            DataContext = new CommandControlViewModel(this, ViewModelMain.Current.CommandController);
             InitializeComponent();
+        }
+
+        private void Uc_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                Dispatcher.BeginInvoke(() => searchTerm.Focus(), DispatcherPriority.Render);
+            }
         }
     }
 }

@@ -17,12 +17,9 @@ namespace PixiEditor.Models.Controllers.Commands
 
         public CommandCollection Commands { get; }
 
-        public RelayCommand ExecuteCommandCommand { get; }
-
         public CommandController(IServiceProvider services)
         {
             _services = services;
-            ExecuteCommandCommand = new RelayCommand(x => ((Command)x).Execute());
             Commands = new();
         }
 

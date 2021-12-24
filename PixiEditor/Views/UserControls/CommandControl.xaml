@@ -3,46 +3,75 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:PixiEditor.Views.UserControls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:commands="clr-namespace:PixiEditor.Models.Controllers.Commands"
              xmlns:vm="clr-namespace:PixiEditor.ViewModels"
+             xmlns:behaviors="clr-namespace:PixiEditor.Helpers.Behaviours"
+             xmlns:cmd="http://www.galasoft.ch/mvvmlight" 
              d:DataContext="{d:DesignInstance Type=vm:CommandControlViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="600"
              Foreground="White"
-             Name="uc">
+             Name="uc"
+             IsVisibleChanged="Uc_IsVisibleChanged">
     <StackPanel>
         <TextBox Style="{StaticResource DarkTextBoxStyle}" Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Padding="5">
+                 Padding="5" x:Name="searchTerm">
             <TextBox.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5,5,0,0"/>
                 </Style>
             </TextBox.Resources>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewKeyDown">
+                    <cmd:EventToCommand Command="{Binding SearchBoxKeyDownCommand}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <i:Interaction.Behaviors>
+                <behaviors:GlobalShortcutFocusBehavior/>
+                <behaviors:TextBoxFocusBehavior/>
+            </i:Interaction.Behaviors>
         </TextBox>
         <Border BorderThickness="1,0,1,1" CornerRadius="0,0,5,5" 
                 Background="{StaticResource AccentColor}" BorderBrush="{StaticResource BrighterAccentColor}" 
                 MinHeight="8" Padding="0,5">
-            <ItemsControl ItemsSource="{Binding SearchResults}">
-                <ItemsControl.ItemTemplate>
+            <ListBox ItemsSource="{Binding SearchResults}" Background="Transparent" BorderThickness="0"
+                     SelectedIndex="{Binding SelectedCommand}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border BorderBrush="Transparent"
+                                            BorderThickness="0"
+                                            Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                          Width="Auto" Margin="0"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Background" Value="{StaticResource AccentColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource BrighterAccentColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource DarkerAccentColor}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
                     <DataTemplate DataType="commands:Command">
                         <Grid Margin="5,0,5,5">
-                            <Grid.Style>
-                                <Style TargetType="Grid">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="False">
-                                            <Setter Property="Background" Value="{StaticResource AccentColor}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource DarkerAccentColor}"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDown">
-                                    <i:InvokeCommandAction Command="{Binding ExecuteCommand, ElementName=uc}"
+                                    <i:InvokeCommandAction Command="{Binding DataContext.ExecuteCommand, ElementName=uc}"
                                                            CommandParameter="{Binding}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
@@ -50,8 +79,8 @@
                             <TextBlock HorizontalAlignment="Right" Text="{Binding Shortcut}"/>
                         </Grid>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Border>
     </StackPanel>
 </UserControl>

@@ -79,6 +79,8 @@ namespace PixiEditor.ViewModels
 
         public CommandController CommandController { get; set; }
 
+        public CommandViewModel CommandViewModel { get; set; }
+
         public IPreferences Preferences { get; set; }
 
         public string ActionDisplay
@@ -164,6 +166,8 @@ namespace PixiEditor.ViewModels
             AddReleaseOnlyViewModels();
 
             CommandController = services.GetService<CommandController>();
+            CommandViewModel = services.GetService<CommandViewModel>();
+
             ShortcutController = services.GetService<ShortcutController>();
             MiscSubViewModel = services.GetService<MiscViewModel>();
 
