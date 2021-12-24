@@ -1,5 +1,4 @@
 ﻿using PixiEditor.Models.Controllers.Commands;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace PixiEditor.Models.Controllers.Shortcuts
@@ -15,10 +14,6 @@ namespace PixiEditor.Models.Controllers.Shortcuts
 
         public static bool BlockShortcutExecution { get; set; }
 
-        public ObservableCollection<ShortcutGroup> ShortcutGroups { get; init; }
-
-        public Shortcut LastShortcut { get; private set; }
-
         public void KeyPressed(Key key, ModifierKeys modifiers)
         {
             if (!BlockShortcutExecution)
@@ -31,25 +26,6 @@ namespace PixiEditor.Models.Controllers.Shortcuts
                 }
 
                 command.Execute();
-
-                LastShortcut = new Shortcut(key, () => command.Execute(), modifiers);
-
-                //Shortcut[] shortcuts = ShortcutGroups.SelectMany(x => x.Shortcuts).ToList().FindAll(x => x.ShortcutKey == key).ToArray();
-                //if (shortcuts.Length < 1)
-                //{
-                //    return;
-                //}
-
-                //shortcuts = shortcuts.OrderByDescending(x => x.Modifier).ToArray();
-                //for (int i = 0; i < shortcuts.Length; i++)
-                //{
-                //    if (modifiers.HasFlag(shortcuts[i].Modifier))
-                //    {
-                //        shortcuts[i].Execute();
-                //        LastShortcut = shortcuts[i];
-                //        break;
-                //    }
-                //}
             }
         }
     }

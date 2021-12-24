@@ -75,21 +75,8 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
             if (key == Key.System)
                 key = args.SystemKey;
 
-            ProcessShortcutUp(key);
-
             if (Owner.BitmapManager.ActiveDocument != null)
                 Owner.BitmapManager.InputTarget.OnKeyUp(key);
-        }
-
-        private void ProcessShortcutUp(Key key)
-        {
-            if (restoreToolOnKeyUp && Owner.ShortcutController.LastShortcut != null &&
-                Owner.ShortcutController.LastShortcut.ShortcutKey == key)
-            {
-                restoreToolOnKeyUp = false;
-                Owner.ToolsSubViewModel.SetActiveTool(Owner.ToolsSubViewModel.LastActionTool);
-                ShortcutController.BlockShortcutExecution = false;
-            }
         }
 
         private void OnMouseDown(object sender, MouseButton button)

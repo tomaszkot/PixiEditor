@@ -73,7 +73,7 @@
 
         <TextBlock Grid.Row="1" Margin="5,0,0,0" FontSize="25" HorizontalAlignment="Center">Shortcuts</TextBlock>
 
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+        <!--<ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
             <WrapPanel HorizontalAlignment="Center">
                 <ItemsControl ItemsSource="{Binding Controller.ShortcutGroups}" Background="Transparent">
                     <ItemsControl.ItemTemplate>
@@ -117,6 +117,6 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </WrapPanel>
-        </ScrollViewer>
+        </ScrollViewer>-->
     </Grid>
 </Window>
