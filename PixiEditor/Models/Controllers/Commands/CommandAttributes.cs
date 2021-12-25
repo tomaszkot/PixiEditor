@@ -6,15 +6,33 @@ namespace PixiEditor.Models.Controllers.Commands
     [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Clarity and simplicity")]
     public static class Commands
     {
+        /// <summary>
+        /// A command that always uses the same command parameter on execution
+        /// </summary>
         public class BasicAttribute : CommandAttribute
         {
             public object Parameter { get; set; }
 
+            /// <summary>
+            /// A command that always uses null as the command parameter
+            /// </summary>
+            /// <param name="name">The name of the command. Used to identify a command. Must be unique.</param>
+            /// <param name="display">The string used to represent the command.</param>
+            /// <param name="key">The default shortcut key</param>
+            /// <param name="modifiers">The default shortcut modifier</param>
             public BasicAttribute(string name, string display, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
                 : base(name, display, key, modifiers)
             {
             }
 
+            /// <summary>
+            /// A command that always uses the <paramref name="parameter"/> as the command parameter
+            /// </summary>
+            /// <param name="name">The name of the command. Used to identify a command. Must be unique.</param>
+            /// <param name="display">The string used to represent the command.</param>
+            /// <param name="parameter">The command parameter</param>
+            /// <param name="key">The default shortcut key</param>
+            /// <param name="modifiers">The default shortcut modifier</param>
             public BasicAttribute(string name, string display, object parameter, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
                 : base(name, display, key, modifiers)
             {
@@ -22,10 +40,24 @@ namespace PixiEditor.Models.Controllers.Commands
             }
         }
 
+        /// <summary>
+        /// A command that generates it's command parameter using a factory. <para/> The factory must be a method and can be static
+        /// </summary>
         public class FactoryAttribute : CommandAttribute
         {
+            /// <summary>
+            /// Gets or sets name of the factory method.
+            /// </summary>
             public string FactoryName { get; set; }
 
+            /// <summary>
+            /// A command that generates it's command parameter using a factory. <para/> The factory must be a method and can be static
+            /// </summary>
+            /// <param name="name">The name of the command. Used to identify a command. Must be unique.</param>
+            /// <param name="display">The string used to represent the command.</param>
+            /// <param name="factoryName">The name of the method that should be used as a factory. Must be in the same class as the property</param>
+            /// <param name="key">The default shortcut key</param>
+            /// <param name="modifiers">The default shortcut modifier</param>
             public FactoryAttribute(string name, string display, string factoryName, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None)
                 : base(name, display, key, modifiers)
             {
@@ -44,6 +76,9 @@ namespace PixiEditor.Models.Controllers.Commands
             }
         }
 
+        /// <summary>
+        /// A basic command that is only shown when the DEBUG conditional is met
+        /// </summary>
         public class DebugAttribute : BasicAttribute
         {
             public DebugAttribute(string name, string display, object parameter = null, Key key = Key.None, ModifierKeys modifiers = ModifierKeys.None) : base(name, display, parameter, key, modifiers)
