@@ -1,7 +1,9 @@
 ﻿using PixiEditor.Helpers;
+using PixiEditor.Models.Controllers;
 using PixiEditor.Models.Controllers.Commands;
 using SkiaSharp;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace PixiEditor.ViewModels.SubViewModels.Main
@@ -11,6 +13,8 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
         [Commands.Basic("PixiEditor.Colors.SwapColors", "Swap Colors", Key.X)]
         public RelayCommand SwapColorsCommand { get; set; }
 
+        [Commands.Basic("PixiEditor.Colors.SelectColor", "")]
+        [Commands.Factory("PixiEditor.Colors.PasteFromClipboard", "Paste color from clipboard", nameof(GetFromClipboard))]
         public RelayCommand SelectColorCommand { get; set; }
 
         public RelayCommand RemoveSwatchCommand { get; set; }
@@ -22,12 +26,8 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
             get => primaryColor;
             set
             {
-                if (primaryColor != value)
-                {
-                    primaryColor = value;
-                    Owner.BitmapManager.PrimaryColor = value;
-                    RaisePropertyChanged("PrimaryColor");
-                }
+                Owner.BitmapManager.PrimaryColor = value;
+                SetProperty(ref primaryColor, value);
             }
         }
 
@@ -36,14 +36,7 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
         public SKColor SecondaryColor
         {
             get => secondaryColor;
-            set
-            {
-                if (secondaryColor != value)
-                {
-                    secondaryColor = value;
-                    RaisePropertyChanged("SecondaryColor");
-                }
-            }
+            set => SetProperty(ref secondaryColor, value);
         }
 
         public ColorsViewModel(ViewModelMain owner)
@@ -69,14 +62,28 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
             }
         }
 
-        private void RemoveSwatch(object parameter)
+        private static SKColor? GetFromClipboard()
         {
-            if (!(parameter is SKColor))
+            if (Clipboard.ContainsText())
             {
-                throw new ArgumentException();
+                string text = Clipboard.GetText();
+
+                if (SKColor.TryParse(text, out SKColor color))
+                {
+                    return color;
+                }
             }
 
-            SKColor color = (SKColor)parameter;
+            return null;
+        }
+
+        private void RemoveSwatch(object parameter)
+        {
+            if (parameter is not SKColor color)
+            {
+                throw new ArgumentException("parameter must be a SKColor", nameof(parameter));
+            }
+
             if (Owner.BitmapManager.ActiveDocument.Swatches.Contains(color))
             {
                 Owner.BitmapManager.ActiveDocument.Swatches.Remove(color);
@@ -85,7 +92,12 @@ namespace PixiEditor.ViewModels.SubViewModels.Main
 
         private void SelectColor(object parameter)
         {
-            PrimaryColor = parameter as SKColor? ?? throw new ArgumentException();
+            var color = parameter as SKColor?;
+
+            if (color != null)
+            {
+                PrimaryColor = color.Value;
+            }
         }
     }
 }
