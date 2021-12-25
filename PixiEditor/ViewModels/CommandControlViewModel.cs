@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace PixiEditor.ViewModels
 {
-    public class CommandControlViewModel : NotifyableObject
+    public class CommandControlViewModel : ViewModelBase
     {
         private readonly CommandController _commandController;
         private readonly CommandControl _control;
