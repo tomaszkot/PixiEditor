@@ -36,8 +36,6 @@ namespace PixiEditor.ViewModels
 
         public RelayCommand ExecuteCommand { get; set; }
 
-        private Command SetColorCommand { get; set; }
-
         public CommandControlViewModel(CommandControl control, CommandController commandController)
         {
             SearchBoxKeyDownCommand = new(SearchBoxKeyDown);
