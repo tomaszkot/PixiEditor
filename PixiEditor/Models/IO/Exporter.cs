@@ -58,7 +58,8 @@ namespace PixiEditor.Models.IO
             }
             else if(Directory.Exists(Path.GetDirectoryName(path)))
             {
-                Parser.PixiParser.Serialize(ParserHelpers.ToSerializable(document), path);
+              Parser.PixiParser.Serialize(ParserHelpers.ToSerializable(document), path);
+              SaveThumbnailProxyImage(document, path);
             }
             else
             {
@@ -66,6 +67,15 @@ namespace PixiEditor.Models.IO
             }
 
             return path;
+        }
+
+        private static void SaveThumbnailProxyImage(Document document, string path)
+        {
+          var bitmap = document.Renderer.FinalBitmap;
+          var fileName = Path.GetFileNameWithoutExtension(path);
+          var destPath = Path.Combine(Path.GetTempPath(), "PixiEditor");
+          destPath = Path.Combine(destPath, fileName + ".png");
+          SaveAs(encodersFactory[FileType.Png](), destPath, bitmap.PixelWidth, bitmap.PixelHeight, bitmap);
         }
 
         public static FileType ParseImageFormat(string extension)
