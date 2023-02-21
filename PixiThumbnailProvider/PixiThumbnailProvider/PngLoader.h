@@ -19,6 +19,12 @@ class PngLoader
         return stream;
     }
 
+    IWICBitmapSource* LoadFromVector(std::vector<std::byte> bytes)
+    {
+      auto stream = SHCreateMemStream((const BYTE*)&bytes[0], bytes.size());
+      return LoadFromStream(stream);
+    }
+
     // Loads a PNG image from the specified stream (using Windows Imaging Component).
     IWICBitmapSource* LoadFromStream(IStream* ipImageStream)
     {

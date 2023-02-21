@@ -29,7 +29,7 @@ public:
         m_logger = logger;
     }
         
-    HBITMAP PngImageProvider::LoadPngImage(std::wstring filePath)
+   /* HBITMAP PngImageProvider::LoadPngImage(std::wstring filePath)
     {
         Gdiplus::GdiplusStartupInput gdiplusStartupInput;
         ULONG_PTR gdiplusToken;
@@ -44,37 +44,125 @@ public:
         bmp->GetHBITMAP(Gdiplus::Color(0xFFFFFFFF), &hBitmap);
         Gdiplus::GdiplusShutdown(gdiplusToken);
         return hBitmap;
-    }
+    }*/
+    
 
-    HBITMAP PngImageProvider::LoadImageByStream(std::wstring filePath)
+public:
+
+  void Save(std::wstring filePath, HBITMAP bitmap)
+  {
+    auto bmp = Gdiplus::Bitmap::FromHBITMAP(bitmap, (HPALETTE)0);
+    CLSID pngClsid;
+    CLSIDFromString(L"{557CF406-1A04-11D3-9A73-0000F81EF32E}", &pngClsid);
+    bmp->Save(filePath.c_str(), &pngClsid, NULL);
+
+  }
+
+  void Save(std::wstring filePath, Gdiplus::Bitmap* bmp)
+  {
+    CLSID pngClsid;
+    CLSIDFromString(L"{557CF406-1A04-11D3-9A73-0000F81EF32E}", &pngClsid);
+    bmp->Save(filePath.c_str(), &pngClsid, NULL);
+
+  }
+
+    HBITMAP PngImageProvider::LoadPngHandle(std::vector<std::byte> bytes)
     {
-        HBITMAP hbmpSplash = NULL;
-
-        // load the PNG image data into a stream
-        IStream* ipImageStream = m_loader.CreateStreamOnResource(filePath.c_str(), L"PNG");
-        if (ipImageStream == NULL)
-            goto Return;
-
-        // load the bitmap with WIC
-
-        IWICBitmapSource* ipBitmap = m_loader.LoadFromStream(ipImageStream);
-        if (ipBitmap == NULL)
-            goto ReleaseStream;
-
-        // create a HBITMAP containing the image
-        hbmpSplash = m_loader.CreateHBITMAP(ipBitmap);
-        ipBitmap->Release();
-
-    ReleaseStream:
-        ipImageStream->Release();
-    Return:
-        return hbmpSplash;
+      auto stream = SHCreateMemStream((const BYTE*)&bytes[0], bytes.size());
+      return LoadPngHandle(stream);
     }
 
-    HBITMAP Load(std::wstring filePath)
+    Gdiplus::Bitmap* PngImageProvider::LoadPngImage(std::vector<std::byte> bytes)
     {
-        return LoadPngImage(filePath);
+      auto stream = SHCreateMemStream((const BYTE*)&bytes[0], bytes.size());
+      return LoadPngImage(stream);
     }
+
+    Gdiplus::Bitmap* PngImageProvider::LoadPngImage(std::vector<unsigned char> bytes)
+    {
+      auto stream = SHCreateMemStream((const BYTE*)&bytes[0], bytes.size());
+      return LoadPngImage(stream);
+    }
+
+    std::vector<unsigned char> LoadPixiPreviewBytes(std::string pixiFile)
+    {
+      auto streamPos = 0;
+
+      load_bytes<unsigned char>(pixiFile, streamPos, 21);//header
+      streamPos += 21;
+      auto previewHeader = load_bytes<unsigned char>(pixiFile, 21, 4);
+      streamPos += 4;
+
+      auto previewSize = BytesToInt32(previewHeader, 0, true);
+
+
+      auto bytes = load_bytes<unsigned char>(pixiFile, streamPos, previewSize);
+      return bytes;
+    }
+
+    //HBITMAP PngImageProvider::LoadImageByStream(std::wstring filePath)
+    //{
+    //    HBITMAP hbmpSplash = NULL;
+
+    //    // load the PNG image data into a stream
+    //    IStream* ipImageStream = m_loader.CreateStreamOnResource(filePath.c_str(), L"PNG");
+    //    if (ipImageStream == NULL)
+    //        goto Return;
+
+    //    // load the bitmap with WIC
+
+    //    IWICBitmapSource* ipBitmap = m_loader.LoadFromStream(ipImageStream);
+    //    if (ipBitmap == NULL)
+    //        goto ReleaseStream;
+
+    //    // create a HBITMAP containing the image
+    //    hbmpSplash = m_loader.CreateHBITMAP(ipBitmap);
+    //    ipBitmap->Release();
+
+    //ReleaseStream:
+    //    ipImageStream->Release();
+    //Return:
+    //    return hbmpSplash;
+    //}
+
+    /*HBITMAP Load(std::wstring filePath)
+    {
+        return LoadPngHandle(filePath);
+    }*/
+
+private:
+
+
+  Gdiplus::Bitmap* PngImageProvider::LoadPngImage(IStream* stream)
+  {
+    Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+    ULONG_PTR gdiplusToken;
+    Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+    auto bmp = Gdiplus::Bitmap::FromStream(stream);
+    if (!bmp)
+    {
+      m_logger(L" Unable to open image file with Gdiplus.");
+      return nullptr;
+    }
+    Save(L"c:\\tmp\\test.png", bmp);
+    //Gdiplus::GdiplusShutdown(gdiplusToken);will make bmp* corrupted
+    
+    return bmp;
+  }
+
+
+  HBITMAP PngImageProvider::LoadPngHandle(IStream* stream)
+  {
+    auto bmp = LoadPngImage(stream);
+    if (!bmp)
+    {
+      m_logger(L" Unable to open image file with Gdiplus.");
+      return nullptr;
+    }
+    HBITMAP hBitmap = nullptr;
+    bmp->GetHBITMAP(Gdiplus::Color(0xFFFFFFFF), &hBitmap);
+    return hBitmap;
+  }
 
 };
 

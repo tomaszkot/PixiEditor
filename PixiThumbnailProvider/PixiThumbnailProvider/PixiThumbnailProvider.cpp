@@ -130,7 +130,7 @@ IFACEMETHODIMP CPixiThumbProvider::GetThumbnail(UINT /*cx*/, HBITMAP *phbmp, WTS
         else
         {
             PngImageProvider pngBitmapProvider([](std::wstring line) { log(line); });
-            tmpBmp = pngBitmapProvider.LoadImageByStream(m_proxyFilePath.c_str());
+            //tmpBmp = pngBitmapProvider.LoadPngHandle(m_proxyFilePath.c_str());
         }
         if (tmpBmp != nullptr)
         {
