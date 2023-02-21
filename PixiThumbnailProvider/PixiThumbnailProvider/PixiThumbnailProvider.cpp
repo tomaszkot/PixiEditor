@@ -15,8 +15,6 @@
 #include "PngImageProvider.h"
 namespace fs = std::filesystem;
 
-bool useBmp = false;
-
 static void GetEnvTempPath(std::wstring& input_parameter) {
     wchar_t* env_var_buffer = nullptr;
     std::size_t size = 0;
@@ -93,7 +91,6 @@ private:
 
     long _cRef;
     std::wstring m_filePath;
-    std::wstring m_proxyFilePath;
 };
 
 HRESULT CPixiThumbProvider_CreateInstance(REFIID riid, void **ppv)
@@ -111,27 +108,26 @@ HRESULT CPixiThumbProvider_CreateInstance(REFIID riid, void **ppv)
 IFACEMETHODIMP CPixiThumbProvider::Initialize(LPCWSTR pszFilePath, DWORD /*grfMode*/)
 {
     m_filePath = pszFilePath;
-    auto proxy = fs::path(m_filePath).stem().string() + (useBmp ? ".bmp" : ".png");
     std::wstring tmpPath;
     GetEnvTempPath(tmpPath);
-    m_proxyFilePath = tmpPath + L"/PixiEditor/"+ std::wstring(proxy.begin(), proxy.end());
-    log(L"1)  m_filePath:" + std::wstring(m_filePath) + L", m_proxyFilePath: "+ m_proxyFilePath);
+    log(L"1)  m_filePath:" + std::wstring(m_filePath));
+    auto ext = fs::path(m_filePath).extension().string();
+    if(ext != ".pixi")
+      return  S_FALSE;
     return S_OK;
 }
 
 IFACEMETHODIMP CPixiThumbProvider::GetThumbnail(UINT /*cx*/, HBITMAP *phbmp, WTS_ALPHATYPE */*pdwAlpha*/)
 {
-    log(L"2) GetThumbnail called! m_filePath: "+ std::wstring(m_filePath) + L", useBmp: "+ std::to_wstring(useBmp));
+    log(L"2) GetThumbnail called! m_filePath: "+ std::wstring(m_filePath));
     try
     {
         HBITMAP tmpBmp = nullptr;
-        if (useBmp)
-            tmpBmp = (HBITMAP)LoadImage(NULL, m_proxyFilePath.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-        else
-        {
-            PngImageProvider pngBitmapProvider([](std::wstring line) { log(line); });
-            //tmpBmp = pngBitmapProvider.LoadPngHandle(m_proxyFilePath.c_str());
-        }
+        PngImageProvider pngBitmapProvider([](std::wstring line) { log(line); });
+        ULONG_PTR gdiplusToken;
+
+        tmpBmp = pngBitmapProvider.LoadPixiBitmapPreviewHandle(m_filePath.c_str(), gdiplusToken);
+        
         if (tmpBmp != nullptr)
         {
             *phbmp = tmpBmp;

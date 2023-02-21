@@ -123,9 +123,7 @@
     <ClCompile Include="PngImageProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileStream.h" />
     <ClInclude Include="PngImageProvider.h" />
-    <ClInclude Include="PngLoader.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

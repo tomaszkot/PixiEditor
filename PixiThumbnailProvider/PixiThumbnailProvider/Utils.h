@@ -1,24 +1,11 @@
 #pragma once
 #include <string>
-#include <locale>
-#include <codecvt>
+#include <vector>
 #include <iostream>
 #include <fstream>
-//inline std::string w2s(const std::wstring& var)
-//{
-//    static std::locale loc("");
-//    auto& facet = std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t>>(loc);
-//    return std::wstring_convert<std::remove_reference<decltype(facet)>::type, wchar_t>(&facet).to_bytes(var);
-//}
-//
-//inline  std::wstring s2w(const std::string& var)
-//{
-//    static std::locale loc("");
-//    auto& facet = std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t>>(loc);
-//    return std::wstring_convert<std::remove_reference<decltype(facet)>::type, wchar_t>(&facet).from_bytes(var);
-//}
+#include <filesystem>
 
-int BytesToInt32(std::vector<unsigned char>& input, int startOffset, bool isLittleEndian)
+inline int BytesToInt32(std::vector<unsigned char>& input, int startOffset, bool isLittleEndian)
 {
   if (input.empty()) {
     std::cerr << "FATAL: Null input byte vector";
@@ -45,12 +32,15 @@ int BytesToInt32(std::vector<unsigned char>& input, int startOffset, bool isLitt
 }
 
 template<typename T>
-std::vector<T> load_bytes(std::string const& filepath, int skipBytes = 0, int size = 0)
+std::vector<T> load_bytes(std::wstring const& filepath, int skipBytes = 0, int size = 0)
 {
   std::ifstream ifs(filepath, std::ios::binary);
 
   if (!ifs)
-    throw std::runtime_error(filepath + ": " + std::strerror(errno));
+  {
+    const std::string path = std::filesystem::path(filepath).string();
+    throw std::runtime_error(path +": " + std::strerror(errno));
+  }
 
   ifs.seekg(skipBytes, std::ios::beg);
 
@@ -60,7 +50,10 @@ std::vector<T> load_bytes(std::string const& filepath, int skipBytes = 0, int si
   std::vector<T> buffer(size);
 
   if (!ifs.read((char*)buffer.data(), buffer.size()))
-    throw std::runtime_error(filepath + ": " + std::strerror(errno));
+  {
+    const std::string path = std::filesystem::path(filepath).string();
+    throw std::runtime_error(path +": " + std::strerror(errno));
+  }
 
   return buffer;
 }
